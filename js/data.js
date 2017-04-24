@@ -1,6 +1,6 @@
 'use strict';
 jQuery("#data").jqGrid({ 
-  url:'server.php?q=2', 
+  url:'server.php', 
   datatype: "json", 
   colNames:['Id','Year', 'Ethnicity', 'Sex','Cause of Death','Count','Percent'], 
   colModel:[ 
@@ -20,8 +20,7 @@ jQuery("#data").jqGrid({
   loadonce: true, 
   viewrecords: true, 
   sortorder: "desc", 
-  height: 400,
-  //editurl: 'server.php', 
+  height: 400, 
 }); 
 
 jQuery("#data").jqGrid('navGrid','#pag',{add:false, del:false, edit:false});
