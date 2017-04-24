@@ -1,75 +1,54 @@
 <?php
 
 /**
-	Examen
-*/
+ *	Prepare the data to be displayed on the grid, read the file 
+ *	and get the data to return it in a json
+ *	@author shades3002@gmail.com
+ */
 
-$file = fopen("file/New_York_City_Leading_Causes_of_Death.csv", "r") or exit("Error en el archivo!");
+require "extractFileData.php";
+$path = "file/New_York_City_Leading_Causes_of_Death.csv";
+$data = array();
+$data = extractFileData($path);
+$respuesta = new stdClass();
+$page = 0;
+$rows = 0;
+$sidx = 0;
+extract($_POST);
 
-$aux = 1;
-$id = 0;
-$data = null;
-
-while(!feof($file)) {
-
-	$linea = fgets($file). "<br />";
-	if($aux!=1){
-		$array = explode(",", $linea);
-
-		$data[] = array('id' =>$id,
-						'Year' => $array[0],
-						'Ethnicity' => $array[1],
-						'Sex' => $array[2], 
-						'Cause_of_Death'=>$array[3],
-						'Count' => $array[4], 
-						'Percent' => $array[5],   
-
-				);
-	}
-	$aux++;
-	$id++;
-
-}
-
-fclose($file);
-
-$page = $_POST['page'];  // Almacena el numero de pagina actual
-$limit = $_POST['rows']; // Almacena el numero de filas que se van a mostrar por pagina
-$sidx = $_POST['sidx'];  // Almacena el indice por el cual se hará la ordenación de los datos
-$sord = $_POST['sord'];  // Almacena el modo de ordenación
-
-if(!$sidx) $sidx =1;
+if(!$sidx){
+	$sidx = 1;
+} 
 
 $count = count($data);
 
-//En base al numero de registros se obtiene el numero de paginas
-if( $count >0 ) {
-        $total_pages = ceil($count/$limit);
+//Based on the number of records you get the number of pages
+if($count > 0 && $rows > 0) {
+	$total_pages = ceil($count/$rows);
 } else {
-        $total_pages = 0;
+	$total_pages = 0;
 }
-if ($page > $total_pages)
-        $page=$total_pages;
 
-//Almacena numero de registro donde se va a empezar a recuperar los registros para la pagina
-$start = $limit*$page - $limit;
+if($page > $total_pages) {
+	$page=$total_pages;
+}
+        
+//Stores the registration number where the records for the page are to be retrieved
+$start = $rows*$page - $rows;
 
-// Se agregan los datos de la respuesta del servidor
-
+//Server response data is added
 $respuesta->page = $page;
 $respuesta->total = $total_pages;
 $respuesta->records = $count; 
 
 $i=0;
-foreach ($data as $key => $value) 
-{
-
+foreach ($data as $key => $value) {
 	$respuesta->rows[$i]['id']=$i;
 	$respuesta->rows[$i]['cell']=$value;
 
 	$i++;
-
 }
-// La respuesta se regresa como json
+//return json
 echo json_encode($respuesta);
 
+?>
