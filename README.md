@@ -17,7 +17,7 @@ Allow evaluate and understand the operation of the jqgrid library, supplying dat
 ```bash
 $ sudo apt-get install git
 $ git clone git@github.com:shades3002/testJqgrid.git
-$ cd backend
+$ cd testJqgrid
 $ git checkout master
 $ php -S localhost:8000 -t ../testJqgrid/
 ```
